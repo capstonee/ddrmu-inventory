@@ -1,0 +1,1 @@
+# ddrmu-inventory
