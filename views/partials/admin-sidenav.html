@@ -1,0 +1,128 @@
+<!-- ========== Left Sidebar Start ========== -->
+<div class="leftside-menu">
+  <!-- LOGO -->
+  <a href="index.html" class="logo text-center logo-light">
+    <span class="logo-lg">
+      <img src="/assets/images/logo.png" alt="" height="70" />
+    </span>
+    <span class="logo-sm">
+      <img src="/assets/images/logo_sm.png" alt="" height="70" />
+    </span>
+  </a>
+
+  <!-- LOGO -->
+  <a href="index.html" class="logo text-center logo-dark">
+    <span class="logo-lg">
+      <img src="/assets/images/logo-dark.png" alt="" height="16" />
+    </span>
+    <span class="logo-sm">
+      <img src="/assets/images/logo_sm_dark.png" alt="" height="16" />
+    </span>
+  </a>
+
+  <div class="h-100" id="leftside-menu-container" data-simplebar>
+    <!--- Sidemenu -->
+    <ul class="side-nav">
+      <li class="side-nav-title side-nav-item">Navigation</li>
+
+      <li class="side-nav-item">
+        <a
+          href="/admin/dashboard"
+          class="side-nav-link {{#if dashboard}}customize-active{{/if}}"
+        >
+          <i class="uil-home-alt"></i>
+          <span> Dashboard </span>
+        </a>
+      </li>
+      <li class="side-nav-item">
+        <a
+          href="/admin/return-item"
+          class="side-nav-link {{#if returnItem}}customize-active{{/if}}"
+        >
+          <i class="mdi mdi-cart-arrow-down"></i>
+          <span> Returnable</span>
+        </a>
+      </li>
+      <li class="side-nav-item">
+        <a
+          data-bs-toggle="collapse"
+          href="#sidebarProduct"
+          aria-expanded="false"
+          aria-controls="sidebarProduct"
+          class="side-nav-link"
+        >
+          <i class="dripicons-inbox"></i>
+          <span> Product </span>
+          <span class="menu-arrow"></span>
+        </a>
+        <div class="collapse" id="sidebarProduct">
+          <ul class="side-nav-second-level">
+            <li>
+              <a href="/admin/products">List</a>
+            </li>
+            <li>
+              <a href="/admin/products/category">Category</a>
+            </li>
+            <li>
+              <a href="/admin/products/brand">Brand</a>
+            </li>
+            <li>
+              <a href="/admin/products/unit">Unit</a>
+            </li>
+            <li>
+              <a href="/admin/products/supplier">Supplier</a>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li class="side-nav-item">
+        <a
+          href="/admin/stocks"
+          class="side-nav-link {{#if stocks}}customize-active{{/if}}"
+        >
+          <i class="mdi mdi-basket"></i>
+          <span> Stocks </span>
+        </a>
+      </li>
+      <li class="side-nav-item">
+        <a
+          href="/admin/users"
+          class="side-nav-link {{#if usersActive}}customize-active{{/if}}"
+        >
+          <i class="uil-user"></i>
+          <span> User Account </span>
+        </a>
+      </li>
+      <li class="side-nav-item">
+        <a
+          data-bs-toggle="collapse"
+          href="#sidebarReports"
+          aria-expanded="false"
+          aria-controls="sidebarProduct"
+          class="side-nav-link"
+        >
+          <i class="dripicons-clipboard"></i>
+          <span> Reports </span>
+          <span class="menu-arrow"></span>
+        </a>
+        <div class="collapse" id="sidebarReports">
+          <ul class="side-nav-second-level">
+            <li>
+              <a href="/admin/sales?type='all">All</a>
+            </li>
+            <li>
+              <a href="/admin/sales?type=consumable">Consumable</a>
+            </li>
+            <li>
+              <a href="/admin/sales?type=equipment">Equipment</a>
+            </li>
+          </ul>
+        </div>
+      </li>
+    </ul>
+    <!-- End Sidebar -->
+    <div class="clearfix"></div>
+  </div>
+  <!-- Sidebar -left -->
+</div>
+<!-- Left Sidebar End -->

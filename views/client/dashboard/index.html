@@ -1,0 +1,244 @@
+<div class="wrapper">
+  {{> client-sidenav}}
+  <div class="content-page">
+    <div class="content">
+      {{> client-topnav}}
+
+      <!-- Start Content-->
+      <div class="container-fluid">
+        <!-- start page title -->
+        <div class="row">
+          <div class="col-12">
+            <div class="page-title-box">
+              <div class="page-title-right"></div>
+              <!-- <h4 class="page-title">Dashboard</h4> -->
+            </div>
+          </div>
+        </div>
+        <!-- end page title -->
+
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body">
+                <!-- Checkout Steps -->
+                <ul class="nav nav-pills bg-nav-pills nav-justified mb-3">
+                  <li class="nav-item">
+                    <a
+                      href="#billing-information"
+                      data-bs-toggle="tab"
+                      aria-expanded="false"
+                      class="nav-link rounded-0 active"
+                    >
+                      <i class="dripicons-inbox font-18"></i>
+                      <span class="d-none d-lg-block">Products</span>
+                    </a>
+                  </li>
+                  <li class="nav-item">
+                    <a
+                      href="#shipping-information"
+                      data-bs-toggle="tab"
+                      aria-expanded="true"
+                      class="nav-link rounded-0"
+                    >
+                      <i class="mdi mdi-truck-fast font-18"></i>
+                      <span class="d-none d-lg-block">Reserved</span>
+                    </a>
+                  </li>
+                </ul>
+
+                <!-- Steps Information -->
+                <div class="tab-content">
+                  <!-- Billing Content-->
+                  <div class="tab-pane show active" id="billing-information">
+                    <div class="row">
+                      <div class="col-lg-12">
+                        <h4 class="mt-2">Products</h4>
+
+                        <p class="text-muted mb-4">Select product or item.</p>
+                        <div class="row">
+                          <div class="col-12">
+                            <div class="card">
+                              <div class="card-body">
+                                <div class="table-responsive">
+                                  <table
+                                    class="table table-centered w-100 dt-responsive nowrap"
+                                    id="product-datatable"
+                                  >
+                                    <thead class="table-light">
+                                      <tr>
+                                        <th class="all">Product</th>
+                                        <th>Stocks</th>
+                                        <th>Returnable</th>
+                                        <th style="width: 90px">Action</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <!-- append row from ajax -->
+                                    </tbody>
+                                  </table>
+                                </div>
+                              </div>
+                              <!-- end card-body-->
+                            </div>
+                            <!-- end card-->
+                          </div>
+                          <!-- end col -->
+                        </div>
+                        <!-- end row -->
+                      </div>
+                    </div>
+                    <!-- end row-->
+                  </div>
+                  <!-- End Billing Information Content-->
+
+                  <!-- Shipping Content-->
+                  <div class="tab-pane" id="shipping-information">
+                    <div class="row">
+                      <div class="col-lg-12">
+                        <h4 class="mt-2">Reservation info</h4>
+
+                        <p class="text-muted mb-3">Please verify your Reserved</p>
+                        <!------------ Reserved ------------------------------->
+                        <div class="row">
+                          <div class="col-12">
+                            <div class="card">
+                              <div class="card-body">
+                                <div class="row">
+                                  <div class="col-lg-12">
+                                    <div class="table-responsive">
+                                      <table
+                                        class="table table-borderless table-nowrap table-centered mb-0"
+                                        id="cart-datatable"
+                                      >
+                                        <thead class="table-light">
+                                          <tr>
+                                            <th>Product</th>
+                                            <th>Stocks</th>
+                                            <th>Return Date</th>
+                                            <th>Quantity</th>
+                                            <th style="width: 50px"></th>
+                                          </tr>
+                                        </thead>
+                                        <tbody>
+                                          <!-- append row here -->
+                                        </tbody>
+                                      </table>
+                                    </div>
+                                    <!-- end table-responsive-->
+
+                                    <!-- Add note input-->
+                                    <div class="mt-3">
+                                      <label
+                                        for="example-textarea"
+                                        class="form-label"
+                                        >Add a Purpose:</label
+                                      >
+                                      <select
+                                        class="form-control mb-2"
+                                        id="productNote"
+                                      >
+                                        <option value=""></option>
+                                        <option value="Training">
+                                          Training
+                                        </option>
+                                        <option value="PPE">PPE</option>
+                                        <option value="Planned event">
+                                          Planned event
+                                        </option>
+                                        <option value="Accident response">
+                                          Accident response
+                                        </option>
+                                        <option value="Drill/Simex">
+                                          Drill/Simex
+                                        </option>
+                                        <option value="Disaster monitoring">
+                                          Disaster monitoring
+                                        </option>
+                                        <option value="Damage assessment">
+                                          Damage assessment
+                                        </option>
+                                      </select>
+                                    </div>
+
+                                    <!-- action buttons-->
+                                    <div class="row mt-4">
+                                      <div class="col-sm-6"></div>
+                                      <!-- end col -->
+                                      <div class="col-sm-6">
+                                        <div class="text-sm-end">
+                                          <button
+                                            class="btn btn-success"
+                                            onclick="addToCart()"
+                                          >
+                                            <i
+                                              class="mdi mdi-cart-plus me-1"
+                                            ></i
+                                            >Submit
+                                          </button>
+                                        </div>
+                                      </div>
+                                      <!-- end col -->
+                                    </div>
+                                    <!-- end row-->
+                                  </div>
+                                  <!-- end col -->
+                                </div>
+                                <!-- end row -->
+                              </div>
+                              <!-- end card-body-->
+                            </div>
+                            <!-- end card-->
+                          </div>
+                          <!-- end col -->
+                        </div>
+                        <!-------------- END CART --------------------->
+                      </div>
+                    </div>
+                    <!-- end row-->
+                  </div>
+                  <!-- End Shipping Information Content-->
+                </div>
+                <!-- end tab content-->
+              </div>
+              <!-- end card-body-->
+            </div>
+            <!-- end card-->
+          </div>
+          <!-- end col -->
+        </div>
+        <!-- end row-->
+      </div>
+      <!-- container -->
+    </div>
+  </div>
+</div>
+
+<!-- third party js -->
+<script src="/assets/js/vendor/apexcharts.min.js"></script>
+<script src="/assets/js/vendor/jquery-jvectormap-1.2.2.min.js"></script>
+<script src="/assets/js/vendor/jquery-jvectormap-world-mill-en.js"></script>
+<!-- third party js ends -->
+
+<script>
+  $(document).ready(function () {
+    //data table config
+    dataTable('product-datatable', 1);
+    dataTable('cart-datatable', 1);
+    //set data to table
+    $.ajax({
+      type: 'GET',
+      url: '/helpers/products',
+      success: function (result) {
+        var productTable = $('#product-datatable').DataTable();
+        var cartTable = $('#cart-datatable').DataTable();
+        result.map((res) => {
+          //end
+          addProductTableRow(res, productTable, cartTable);
+        });
+      },
+    }).fail(function (res) {
+      errorSweetAlert();
+    });
+  });
+</script>

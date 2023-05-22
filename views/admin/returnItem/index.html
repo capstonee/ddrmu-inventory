@@ -1,0 +1,326 @@
+<div class="wrapper">
+  {{> admin-sidenav returnItem=true}}
+  <div class="content-page">
+    <div class="content">
+      {{> admin-topnav}}
+
+      <!-- Start Content-->
+      <div class="container-fluid">
+        <!-- start page title -->
+        <div class="row">
+          <div class="col-12">
+            <div class="page-title-box">
+              <div class="page-title-right">
+                <button
+                  class="btn btn-primary"
+                  data-bs-toggle="modal"
+                  data-bs-target="#scanQrCodeModal"
+                >
+                  Scan QR code
+                </button>
+              </div>
+              <h4 class="page-title">Returnable</h4>
+            </div>
+          </div>
+        </div>
+        <!-- end page title -->
+
+        <div class="row">
+          <div class="col-12">
+            <div class="card widget-inline">
+              <div class="card-body p-0">
+                <div class="row g-0">
+                  <div class="col-sm-6 col-lg-4">
+                    <a href="/admin/stocks">
+                      <div class="card shadow-none m-0">
+                        <div class="card-body text-center">
+                          <i
+                            class="dripicons-inbox"
+                            style="font-size: 24px"
+                          ></i>
+                          <h3><span>{{remainingStocks}}</span></h3>
+                          <p class="text-muted font-15 mb-0">
+                            Remaining stocks
+                          </p>
+                        </div>
+                      </div>
+                    </a>
+                  </div>
+
+                  <div class="col-sm-6 col-lg-4">
+                    <a href="/admin/return-item">
+                      <div class="card shadow-none m-0 border-start">
+                        <div class="card-body text-center">
+                          <i
+                            class="dripicons-checklist"
+                            style="font-size: 24px"
+                          ></i>
+                          <h3><span id="pendingTask">0</span></h3>
+                          <p class="text-muted font-15 mb-0">Borrowed Item</p>
+                        </div>
+                      </div>
+                    </a>
+                  </div>
+
+                  <div class="col-sm-6 col-lg-4">
+                    <a href="/admin/users">
+                      <div class="card shadow-none m-0 border-start">
+                        <div class="card-body text-center">
+                          <i
+                            class="dripicons-user-group"
+                            style="font-size: 24px"
+                          ></i>
+                          <h3><span>{{cntUser}}</span></h3>
+                          <p class="text-muted font-15 mb-0">User Account</p>
+                        </div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body py-4">
+                <div class="table-responsive">
+                  <table
+                    class="table table-centered table-nowrap mb-0"
+                    id="sales-datatable"
+                  >
+                    <thead class="table-light">
+                      <tr>
+                        <th>{{toUpperCharAt credentials.type}}</th>
+                        <th>Date approve</th>
+                        <th>Receive by</th>
+                        <th>Date Receive</th>
+                        <th>Status</th>
+                        <th style="width: 125px">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody></tbody>
+                  </table>
+                </div>
+              </div>
+              <!-- end card-body-->
+            </div>
+            <!-- end card-->
+          </div>
+          <!-- end col -->
+        </div>
+        <!-- end row -->
+      </div>
+      <!-- container -->
+    </div>
+  </div>
+</div>
+
+<!-- third party js -->
+<script src="/assets/js/vendor/apexcharts.min.js"></script>
+<script src="/assets/js/vendor/jquery-jvectormap-1.2.2.min.js"></script>
+<script src="/assets/js/vendor/jquery-jvectormap-world-mill-en.js"></script>
+<!-- third party js ends -->
+
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="modal-product"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myLargeModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myLargeModalLabel">Products</h4>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-hidden="true"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="table-responsive">
+          <table
+            class="table table-centered table-nowrap mb-0"
+            id="data-datatable"
+          >
+            <thead class="table-light">
+              <tr>
+                <th>Name</th>
+                <th>Quantity</th>
+                <th>Date return</th>
+                <th>Equipment Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- /.modal -->
+
+<!-- SCAN QRCODE Modal -->
+<div
+  class="modal fade"
+  id="scanQrCodeModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">
+          Scan QR code to accept return item
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body pb-5">
+        <div class="row">
+          <div class="col-12">
+            <form action="/admin/qrcode/acceptReturnItem" method="POST">
+              <select
+                name="user_id"
+                class="form-control mb-2"
+                id="usersOption"
+                required
+              >
+                <option value="">Select user</option>
+              </select>
+              <select class="form-select mb-2" name="equipmentStatus" required>
+                <option value="">Select status</option>
+                <option value="Serviceable">Serviceable</option>
+                <option value="Needs Repair">Needs Repair</option>
+                <option value="Non-Serviceable">Non-Serviceable</option>
+                <option value="damage">Damage</option>
+                <option value="Low Battery ">Low Battery</option>
+                <option value="Surface Scratch">Surface Scratch</option>
+                <option value="Cracks">Cracks</option>
+              </select>
+              <input
+                name="product_id"
+                type="text"
+                class="form-control"
+                id="product_id_qrcode"
+                required
+                hidden
+              />
+              <button type="submit" id="acceptBorrowProductBtn" hidden>
+                submit
+              </button>
+            </form>
+            <div style="width: 100%" id="reader"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function () {
+    //data table config
+    dataTable('sales-datatable', 1);
+
+    $.ajax({
+      type: 'GET',
+      url: `/get/sales/accepted/true`,
+      success: function (result) {
+        $('#pendingTask').html(result.cntCustomerReturnItem);
+        var Datatable = $('#sales-datatable').DataTable();
+        result.allSales.map((res) => {
+          appendAllSalesToReturn(res, Datatable, 'reserve item', 'Return');
+        });
+      },
+    }).fail(function (res) {
+      errorSweetAlert();
+    });
+  });
+</script>
+
+<script>
+  $(document).ready(function () {
+    let getDateTotal = 'today';
+    totalSalesDashboard();
+
+    $(`#totalGrandSalesDate`).click(function () {
+      totalSalesDashboard();
+    });
+    function totalSalesDashboard() {
+      $(`#top-sales-datatable`).html('');
+      $.ajax({
+        type: 'GET',
+        url: `/get/total/sales/${getDateTotal}`,
+        success: function (result) {
+          $(`#totalGrandSales`).html(result.grandTotal);
+          result.products.map((r) => {
+            appendRowTopSales(r, 'top-sales-datatable');
+          });
+        },
+      }).fail(function (res) {
+        errorSweetAlert();
+      });
+      let elem;
+      if (getDateTotal == 'today') {
+        elem = `Sales ${getDateTotal} <i class="dripicons-chevron-right m-hover"></i>`;
+        getDateTotal = 'all';
+      } else {
+        elem = `<i class="dripicons-chevron-left m-hover"></i> Over${getDateTotal} sales`;
+        getDateTotal = 'today';
+      }
+      $(`#totalGrandSalesDate`).html(elem);
+    }
+  });
+</script>
+
+<script type="text/javascript">
+  function onScanSuccess(qrCodeMessage) {
+    $(`#product_id_qrcode`).val(qrCodeMessage);
+    $('#acceptBorrowProductBtn').click();
+  }
+
+  function onScanError(errorMessage) {
+    //handle scan error
+  }
+
+  var html5QrcodeScanner = new Html5QrcodeScanner('reader', {
+    fps: 10,
+    qrbox: 250,
+  });
+  html5QrcodeScanner.render(onScanSuccess, onScanError);
+</script>
+
+<script>
+  $(document).ready(function () {
+    //GET ALL CLIENT USERS
+    $.ajax({
+      type: 'GET',
+      url: `/get/all-user`,
+      success: function (result) {
+        result.map((r) => {
+          $(`#usersOption`).append(
+            `<option value="${r._id}">${r.firstname ? r.firstname : r.email} ${
+              r.lastname ? r.lastname : ''
+            }</option>`
+          );
+        });
+      },
+    }).fail(function (res) {
+      errorSweetAlert();
+    });
+  });
+</script>

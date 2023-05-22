@@ -1,0 +1,256 @@
+<div class="wrapper">
+  {{> admin-sidenav}}
+  <div class="content-page">
+    <div class="content">
+      {{> admin-topnav}}
+
+      <!-- Start Content-->
+      <div class="container-fluid">
+        <!-- start page title -->
+        <div class="row">
+          <div class="col-12">
+            <div class="page-title-box">
+              <div class="page-title-right"></div>
+              <h4 class="page-title">Products</h4>
+            </div>
+          </div>
+        </div>
+        <!-- end page title -->
+        <div class="row">
+          <div class="col-xl-4 col-lg-5">
+            <div class="card text-center">
+              <div class="card-body">
+                <img
+                  src="{{credentials.profile_img}}"
+                  class="rounded-circle avatar-lg img-thumbnail"
+                  alt="profile-image"
+                />
+
+                <h4 class="mb-0 mt-2">
+                  {{credentials.firstname}} {{credentials.lastname}}
+                </h4>
+                <p class="text-muted font-14">Admin</p>
+
+                <button type="button" class="btn btn-success btn-sm mb-2" data-bs-toggle="modal"
+                data-bs-target="#add-modal">
+                  Change profile
+                </button>
+
+                <div class="text-start mt-3">
+                  <p class="text-muted mb-2 font-13">
+                    <strong>Mobile :</strong
+                    ><span class="ms-2">{{credentials.phoneNumber}}</span>
+                  </p>
+
+                  <p class="text-muted mb-2 font-13">
+                    <strong>Email :</strong>
+                    <span class="ms-2">{{credentials.email}}</span>
+                  </p>
+                </div>
+              </div>
+              <!-- end card-body -->
+            </div>
+            <!-- end card -->
+          </div>
+          <!-- end col-->
+
+          <div class="col-xl-8 col-lg-7">
+            <div class="card">
+              <div class="card-body">
+                <form action="/admin/profile/update" method="POST">
+                  <h5 class="mb-4 text-uppercase">
+                    <i class="mdi mdi-account-circle me-1"></i> Personal Info
+                  </h5>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="mb-3">
+                        <label for="firstname" class="form-label"
+                          >First Name</label
+                        >
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="firstname"
+                          placeholder="Enter first name"
+                          name="firstname"
+                          value="{{credentials.firstname}}"
+                          required
+                        />
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="mb-3">
+                        <label for="lastname" class="form-label"
+                          >Last Name</label
+                        >
+                        <input
+                          type="text"
+                          class="form-control"
+                          id="lastname"
+                          placeholder="Enter last name"
+                          name="lastname"
+                          value="{{credentials.lastname}}"
+                          required
+                        />
+                      </div>
+                    </div>
+                    <!-- end col -->
+                  </div>
+                  <!-- end row -->
+
+                  <div class="row">
+                    <div class="col-md-6">
+                      <div class="mb-3">
+                        <label for="phoneNumber" class="form-label"
+                          >Phone number</label
+                        >
+                        <input
+                          type="number"
+                          class="form-control"
+                          id="phoneNumber"
+                          placeholder="Enter phone number"
+                          name="phoneNumber"
+                          value="{{credentials.phoneNumber}}"
+                          required
+                        />
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="mb-3">
+                        <label for="useremail" class="form-label"
+                          >Email Address</label
+                        >
+                        <input
+                          type="email"
+                          class="form-control"
+                          id="useremail"
+                          placeholder="Enter email"
+                          name="email"
+                          value="{{credentials.email}}"
+                          required
+                        />
+                      </div>
+                    </div>
+                    <div class="col-md-6">
+                      <div class="mb-3">
+                        <label for="userpassword" class="form-label"
+                          >Password</label
+                        >
+                        <input
+                          type="password"
+                          class="form-control"
+                          id="userpassword"
+                          placeholder="Enter password"
+                          name="password"
+                        />
+                        <span class="form-text text-muted"><small>If you want to change password please fillup the form</span>
+                      </div>
+                    </div>
+                    <!-- end col -->
+                  </div>
+                  <!-- end row -->
+
+                  <div class="text-end">
+                    <button type="submit" class="btn btn-success mt-2">
+                      <i class="mdi mdi-content-save"></i> Update profile
+                    </button>
+                  </div>
+                </form>
+              </div>
+              <!-- end card body -->
+            </div>
+            <!-- end card -->
+          </div>
+          <!-- end col -->
+        </div>
+        <!-- end row -->
+      </div>
+      <!-- container -->
+    </div>
+  </div>
+</div>
+
+
+<div
+  id="add-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body my-4">
+        <form
+          action="/admin/profile/upload"
+          method="POST"
+          enctype="multipart/form-data"
+        >
+        <div
+        class="col-sm-12 dropzone"
+        id="myAwesomeDropzone"
+        data-plugin="dropzone"
+        data-previews-container="#file-previews"
+        data-upload-preview-template="#uploadPreviewTemplate"
+      >
+        <center>
+          <img
+            class="img-fluid"
+            id="imageResult"
+            src="{{credentials.profile_img}}"
+            class="rounded-circle"
+          />
+        </center>
+        <input
+          id="upload"
+          name="img"
+          type="file"
+          accept=".png,.jpg,.jpeg"
+          onchange="readURL(this);"
+          class="form-control border-0"
+        />
+      </div>
+          <div class="text-center mt-4">
+            <button class="btn btn-primary">Update profile</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  /*  ==========================================
+    SHOW UPLOADED IMAGE
+* ========================================== */
+  function readURL(input) {
+    if (input.files && input.files[0]) {
+      var reader = new FileReader();
+
+      reader.onload = function (e) {
+        $("#imageResult").attr("src", e.target.result);
+        $("#imgdatainput").val(e.target.result);
+      };
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
+
+  $(function () {
+    $("#upload").on("change", function () {
+      readURL(input);
+    });
+  });
+
+  /*  ==========================================
+    SHOW UPLOADED IMAGE NAME
+* ========================================== */
+  var input = document.getElementById("upload");
+  var infoArea = document.getElementById("upload-label");
+
+  input.addEventListener("change", showFileName);
+  function showFileName(event) {
+    var input = event.srcElement;
+    var fileName = input.files[0].name;
+    infoArea.textContent = "File name: " + fileName;
+  }
+</script>

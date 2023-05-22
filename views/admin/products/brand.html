@@ -1,0 +1,149 @@
+<div class="wrapper">
+  {{> admin-sidenav}}
+  <div class="content-page">
+    <div class="content">
+      {{> admin-topnav}}
+
+      <!-- Start Content-->
+      <div class="container-fluid">
+        <!-- start page title -->
+        <div class="row">
+          <div class="col-12">
+            <div class="page-title-box">
+              <h4 class="page-title">Product / Brand</h4>
+            </div>
+          </div>
+        </div>
+        <!-- end page title -->
+
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body">
+                <div class="row mb-2">
+                  <div class="col-sm-12">
+                    <button
+                      class="btn btn-success mb-2"
+                      data-bs-toggle="modal"
+                      data-bs-target="#add-modal"
+                    >
+                      <i class="mdi mdi-plus-circle me-2"></i> Add Brand
+                    </button>
+                  </div>
+                </div>
+
+                <div class="table-responsive">
+                  <table
+                    class="table table-centered table-striped dt-responsive nowrap w-100"
+                    id="data-datatable"
+                  >
+                    <thead>
+                      <tr>
+                        <th>Brand name</th>
+                        <th style="width: 75px">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {{#each brand}}
+                      <tr id="{{this._id}}">
+                        <td>{{this.name}}</td>
+                        <td>
+                          <a
+                            class="action-icon"
+                            data-bs-toggle="modal"
+                            data-bs-target="#update-modal-{{this._id}}"
+                          >
+                            <i class="mdi mdi-square-edit-outline"></i
+                          ></a>
+                          <a
+                            class="action-icon"
+                            onclick="delete_data('/admin/products/brand/delete/','{{this._id}}')"
+                          >
+                            <i class="mdi mdi-delete"></i
+                          ></a>
+                        </td>
+                      </tr>
+                      {{/each}}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <!-- end card-body-->
+            </div>
+            <!-- end card-->
+          </div>
+          <!-- end col -->
+        </div>
+        <!-- end row -->
+      </div>
+      <!-- container -->
+    </div>
+  </div>
+</div>
+<!-- ADD MODAL -->
+<div
+  id="add-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="text-center my-4"></div>
+        <form action="/admin/products/brand/add" method="POST">
+          <div class="mb-3">
+            <h4 class="text-center">Add Brand</h4>
+            <label for="name" class="form-label"
+              >Brand name<span style="color: red">*</span></label
+            >
+            <input name="name" class="form-control" type="text" required />
+            <span style="margin-top: 15px; font-size: 12px"
+              >Please fill out the black for adding new brand</span
+            >
+          </div>
+          <div class="mb-3 text-center">
+            <button class="btn btn-primary">Add brand</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- UPDATE MODAL -->
+{{#each brand}}
+<div
+  id="update-modal-{{this._id}}"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="text-center my-4">
+          <h4 class="text-center">Update Brand</h4>
+        </div>
+        <form action="/admin/products/brand/update" method="POST">
+          <div class="mb-3">
+            <input name="_id" type="hidden" value="{{this._id}}" />
+            <label for="name" class="form-label">Brand name</label>
+            <input
+              name="name"
+              class="form-control"
+              type="text"
+              value="{{this.name}}"
+              required
+            />
+          </div>
+          <div class="mb-3 text-center">
+            <button class="btn btn-primary">Update brand</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{{/each}}

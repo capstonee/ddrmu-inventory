@@ -1,0 +1,472 @@
+<div class="wrapper">
+  {{> admin-sidenav dashboard=true}}
+  <div class="content-page">
+    <div class="content">
+      {{> admin-topnav}}
+
+      <!-- Start Content-->
+      <div class="container-fluid">
+        <!-- start page title -->
+        <div class="row">
+          <div class="col-12">
+            <div class="page-title-box">
+              <div class="page-title-right">
+                <button
+                  class="btn btn-primary"
+                  data-bs-toggle="modal"
+                  data-bs-target="#scanQrCodeModal"
+                >
+                  Scan QR code
+                </button>
+              </div>
+              <h4 class="page-title">Dashboard</h4>
+            </div>
+          </div>
+        </div>
+        <!-- end page title -->
+
+        <div class="row">
+          <div class="col-12">
+            <div class="card widget-inline">
+              <div class="card-body p-0">
+                <div class="row g-0">
+                  <div class="col-sm-6 col-lg-4">
+                    <a href="/admin/products?type=remaining">
+                      <div class="card shadow-none m-0">
+                        <div class="card-body text-center">
+                          <i class="dripicons-box" style="font-size: 24px"></i>
+                          <h3><span>{{remainingStocks}}</span></h3>
+                          <p class="text-muted font-15 mb-0">Equipments</p>
+                        </div>
+                      </div>
+                    </a>
+                  </div>
+
+                  <div class="col-sm-6 col-lg-4">
+                    <a href="/admin/return-item">
+                      <div class="card shadow-none m-0 border-start">
+                        <div class="card-body text-center">
+                          <i
+                            class="dripicons-checklist"
+                            style="font-size: 24px"
+                          ></i>
+                          <h3><span id="pendingTask">0</span></h3>
+                          <p class="text-muted font-15 mb-0">
+                            Reservation pending
+                          </p>
+                        </div>
+                      </div>
+                    </a>
+                  </div>
+
+                  <div class="col-sm-6 col-lg-4">
+                    <a href="/admin/products?type=consumable">
+                      <div class="card shadow-none m-0 border-start">
+                        <div class="card-body text-center">
+                          <i
+                            class="dripicons-inbox"
+                            style="font-size: 24px"
+                          ></i>
+                          <h3><span>{{consumable}}</span></h3>
+                          <p class="text-muted font-15 mb-0">Consumable item</p>
+                        </div>
+                      </div>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body py-4">
+                <h5>PENDING</h5>
+                <div class="table-responsive">
+                  <table
+                    class="table table-centered table-nowrap mb-0"
+                    id="sales-datatable"
+                  >
+                    <thead class="table-light">
+                      <tr>
+                        <th>{{toUpperCharAt credentials.type}}</th>
+                        <th>Date reserve</th>
+                        <th>Purpose</th>
+                        <th>Request Status</th>
+                        <th style="width: 125px">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody></tbody>
+                  </table>
+                </div>
+              </div>
+              <!-- end card-body-->
+            </div>
+            <!-- end card-->
+          </div>
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body pb-4">
+                <h5>READY TO COLLECT</h5>
+                <div class="table-responsive">
+                  <table
+                    class="table table-centered table-nowrap mb-0"
+                    id="sales-datatable-pickup"
+                  >
+                    <thead class="table-light">
+                      <tr>
+                        <th>{{toUpperCharAt credentials.type}}</th>
+                        <th>Name</th>
+                        <th>Contact number</th>
+                        <th>Note</th>
+                        <th>Accepted date</th>
+                        <th style="width: 125px">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {{#each pickups}}
+                      <tr>
+                        <td>{{user.department}}</td>
+                        <td>{{user.firstname}} {{user.lastname}}</td>
+                        <td>{{user.phoneNumber}}</td>
+                        <td>{{note}}</td>
+                        <td>{{convertDate updatedAt 'MMM DD, YYYY'}}</td>
+                        <td>
+                          <button
+                            type="button"
+                            class="btn btn-primary btn-sm"
+                            onclick="pickup('{{_id}}')"
+                          >
+                            Pick-up
+                          </button>
+                        </td>
+                      </tr>
+                      {{/each}}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <!-- end card-body-->
+            </div>
+            <!-- end card-->
+          </div>
+          <!-- end col -->
+        </div>
+        <!-- end row -->
+
+        <div class="row">
+          <div class="col-xl-12 col-lg-12 order-lg-2 order-xl-1">
+            <div class="card">
+              <div class="card-body">
+                <div
+                  class="d-flex justify-content-between align-items-center mb-2"
+                >
+                  <h4 class="header-title">Top Items</h4>
+                </div>
+
+                <div class="table-responsive">
+                  <table
+                    class="table table-centered table-nowrap table-hover mb-0"
+                  >
+                    <tbody id="top-sales-datatable"></tbody>
+                  </table>
+                </div>
+                <!-- end table-responsive-->
+              </div>
+              <!-- end card-body-->
+            </div>
+            <!-- end card-->
+          </div>
+          <!-- end col-->
+          <!-- end col-->
+          <!-- end col -->
+        </div>
+        <!-- end row -->
+      </div>
+      <!-- container -->
+    </div>
+  </div>
+</div>
+
+<!-- PICK UP -->
+<form action="/admin/return-item/pick-up" method="POST">
+  <div
+    class="modal fade"
+    id="modal-pickup"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="myLargeModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" id="myLargeModalLabel">Pick up</h4>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="modal"
+            aria-hidden="true"
+          ></button>
+        </div>
+        <div class="modal-body">
+          <input
+            type="text"
+            id="userId-pickup"
+            name="userId"
+            class="form-control"
+            required
+            hidden
+          />
+          <div class="row">
+            <div class="col-12 p-2">
+              <label>Name</label>
+              <input
+                type="text"
+                id="name-pickup"
+                name="name"
+                class="form-control"
+                required
+              />
+            </div>
+            <div class="col-12 p-2">
+              <label>Date pick-up</label>
+              <input
+                type="date"
+                id="date-pickup"
+                name="pickupAt"
+                class="form-control"
+                required
+              />
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success">Pick-up</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+<!-- /.modal -->
+
+<!-- third party js -->
+<script src="/assets/js/vendor/apexcharts.min.js"></script>
+<script src="/assets/js/vendor/jquery-jvectormap-1.2.2.min.js"></script>
+<script src="/assets/js/vendor/jquery-jvectormap-world-mill-en.js"></script>
+<!-- third party js ends -->
+
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="modal-product"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="myLargeModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myLargeModalLabel">Products</h4>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-hidden="true"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="table-responsive">
+          <table
+            class="table table-centered table-nowrap mb-0"
+            id="data-datatable"
+          >
+            <thead class="table-light">
+              <tr>
+                <th>Name</th>
+                <th>Stocks</th>
+                <th>Quantity</th>
+                <th>Date return</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <div class="text-sm-end">
+          <button class="btn btn-success" onclick="checkOutProduct()">
+            <i class="mdi mdi-cart-plus me-1"></i>Approve
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- /.modal -->
+
+<!-- SCAN QRCODE Modal -->
+<div
+  class="modal fade"
+  id="scanQrCodeModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">
+          Scan QR code to accept borrow item
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body pb-5">
+        <div class="row">
+          <div class="col-12">
+            <form action="/admin/qrcode/acceptReturnItem" method="POST">
+              <label>Select User</label>
+              <select
+                name="user_id"
+                class="form-control mb-2"
+                id="usersOption"
+                required
+              >
+                <option value=""></option>
+              </select>
+              <label>Date return</label>
+              <input
+                name="returnDate"
+                type="date"
+                class="form-control mb-3"
+                required
+              />
+              <input
+                name="product_id"
+                type="text"
+                class="form-control"
+                id="product_id_qrcode"
+                required
+                hidden
+              />
+              <button type="submit" id="acceptBorrowProductBtn" hidden>
+                submit
+              </button>
+            </form>
+            <div style="width: 100%" id="reader"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function () {
+    //data table config
+    dataTable('sales-datatable', 1);
+
+    //GET ALL PENDING SALES
+    $.ajax({
+      type: 'GET',
+      url: `/get/sales/pending/all`,
+      success: function (result) {
+        $('#pendingTask').html(result.cntPending);
+        var Datatable = $('#sales-datatable').DataTable();
+        result.allSales.map((res) => {
+          appendAllSales(res, Datatable, 'reserve item', 'Approved');
+        });
+      },
+    }).fail(function (res) {
+      errorSweetAlert();
+    });
+
+    //GET ALL CLIENT USERS
+    $.ajax({
+      type: 'GET',
+      url: `/get/all-user`,
+      success: function (result) {
+        result.map((r) => {
+          $(`#usersOption`).append(
+            `<option value="${r._id}">${r.firstname ? r.firstname : r.email} ${
+              r.lastname ? r.lastname : ''
+            }</option>`
+          );
+        });
+      },
+    }).fail(function (res) {
+      errorSweetAlert();
+    });
+  });
+</script>
+
+<script>
+  $(document).ready(function () {
+    let getDateTotal = 'today';
+    totalSalesDashboard();
+
+    $(`#totalGrandSalesDate`).click(function () {
+      totalSalesDashboard();
+    });
+    function totalSalesDashboard() {
+      $(`#top-sales-datatable`).html('');
+      $.ajax({
+        type: 'GET',
+        url: `/get/total/sales/${getDateTotal}`,
+        success: function (result) {
+          $(`#totalGrandSales`).html(result.grandTotal);
+          result.products.map((r) => {
+            appendRowTopSales(r, 'top-sales-datatable');
+          });
+        },
+      }).fail(function (res) {
+        errorSweetAlert();
+      });
+      let elem;
+      if (getDateTotal == 'today') {
+        elem = `Sales ${getDateTotal} <i class="dripicons-chevron-right m-hover"></i>`;
+        getDateTotal = 'all';
+      } else {
+        elem = `<i class="dripicons-chevron-left m-hover"></i> Over${getDateTotal} sales`;
+        getDateTotal = 'today';
+      }
+      $(`#totalGrandSalesDate`).html(elem);
+    }
+  });
+</script>
+
+<script type="text/javascript">
+  function onScanSuccess(qrCodeMessage) {
+    $(`#product_id_qrcode`).val(qrCodeMessage);
+    $('#acceptBorrowProductBtn').click();
+  }
+
+  function onScanError(errorMessage) {
+    //handle scan error
+  }
+
+  var html5QrcodeScanner = new Html5QrcodeScanner('reader', {
+    fps: 10,
+    qrbox: 250,
+  });
+  html5QrcodeScanner.render(onScanSuccess, onScanError);
+</script>
+
+<script>
+  // const pickups = JSON.parse(
+  //   '{{#renderJsonString pickups}}{{/renderJsonString}}'
+  // );
+
+  function pickup(userId) {
+    $('#modal-pickup').modal('show');
+    $('#userId-pickup').val(userId);
+  }
+</script>

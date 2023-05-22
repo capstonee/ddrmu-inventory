@@ -1,0 +1,231 @@
+<div class="wrapper">
+  {{> admin-sidenav usersActive=true}}
+  <div class="content-page">
+    <div class="content">
+      {{> admin-topnav}}
+
+      <!-- Start Content-->
+      <div class="container-fluid">
+        <!-- start page title -->
+        <div class="row">
+          <div class="col-12">
+            <div class="page-title-box">
+              <h4 class="page-title">User Account</h4>
+            </div>
+          </div>
+        </div>
+        <!-- end page title -->
+
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body">
+                <div class="row mb-2">
+                  <div class="col-sm-12">
+                    <button
+                      class="btn btn-success mb-2"
+                      data-bs-toggle="modal"
+                      data-bs-target="#add-modal"
+                    >
+                      <i class="mdi mdi-plus-circle me-2"></i> Add User Account
+                    </button>
+                  </div>
+                </div>
+
+                <div class="table-responsive">
+                  <table
+                    class="table table-centered table-striped dt-responsive nowrap w-100"
+                    id="data-datatable"
+                  >
+                    <thead>
+                      <tr>
+                        <th>Customer</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Address</th>
+                        <th>Created Date</th>
+                        <th>Status</th>
+                        <th style="width: 75px">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {{#each users}}
+                      <tr id="{{this._id}}">
+                        <td class="table-user">
+                          <img
+                            src="/assets/images/users/profile.jpg"
+                            alt="table-user"
+                            class="me-2 rounded-circle"
+                          />
+                          <a
+                            href="javascript:void(0);"
+                            class="text-body fw-semibold"
+                            >{{#if this.firstname}}
+                            {{this.firstname}}{{else}}{{this.email}}{{/if}}
+                            {{this.lastname}}</a
+                          >
+                        </td>
+                        <td>{{this.email}}</td>
+                        <td>{{this.phoneNumber}}</td>
+                        <td>{{this.address}}</td>
+                        <td>{{moment this.createdAt 'MMMM DD YYYY'}}</td>
+                        <td>
+                          {{#if this.isStatus}}
+                          <span class="badge badge-success-lighten"
+                            >Active</span
+                          >
+                          {{else}}
+                          <span class="badge badge-danger-lighten"
+                            >Deactivate</span
+                          >
+                          {{/if}}
+                        </td>
+
+                        <td>
+                          <a
+                            class="action-icon"
+                            data-bs-toggle="modal"
+                            data-bs-target="#update-modal-{{this._id}}"
+                          >
+                            <i class="mdi mdi-square-edit-outline"></i
+                          ></a>
+                          <a
+                            class="action-icon"
+                            onclick="delete_data('/admin/user/delete/','{{this._id}}')"
+                          >
+                            <i class="mdi mdi-delete"></i
+                          ></a>
+                        </td>
+                      </tr>
+                      {{/each}}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <!-- end card-body-->
+            </div>
+            <!-- end card-->
+          </div>
+          <!-- end col -->
+        </div>
+        <!-- end row -->
+      </div>
+      <!-- container -->
+    </div>
+  </div>
+</div>
+<!-- ADD MODAL -->
+<div
+  id="add-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="text-center my-4">
+          <h4 class="text-center">Create user</h4>
+        </div>
+
+        <form action="/admin/user/add" method="POST">
+          <div class="mb-3">
+            <label for="emailaddress" class="form-label">User name</label>
+            <input
+              name="email"
+              class="form-control"
+              type="email"
+              required
+              placeholder="Juan@gmail.com"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input
+              name="password"
+              class="form-control"
+              type="password"
+              required
+              placeholder="Enter password"
+              onchange="passwordChecker()"
+              oninput="passwordChecker()"
+              id="passwordCheck"
+            />
+            <span style="font-size: 10px">
+              Password must have a minimum 8 character
+            </span>
+          </div>
+
+          <div class="mb-3 text-center">
+            <button class="btn btn-primary" id="passwordCheckBtn">
+              Add {{credentials.type}}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- UPDATE MODAL -->
+{{#each users}}
+<div
+  id="update-modal-{{this._id}}"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="text-center my-4">
+          <h4 class="text-center">Update user</h4>
+        </div>
+        <form action="/admin/user/update" method="POST">
+          <div class="mb-3">
+            <input name="_id" type="hidden" value="{{this._id}}" />
+            <label for="emailaddress" class="form-label">Email address</label>
+            <input
+              name="email"
+              class="form-control"
+              type="email"
+              required
+              placeholder="Juan@gmail.com"
+              value="{{this.email}}"
+            />
+          </div>
+
+          <div class="mb-3">
+            <label for="password" class="form-label">Password</label>
+            <input
+              name="password"
+              class="form-control"
+              type="password"
+              placeholder="Enter password to change"
+            />
+            <span style="font-size: 10px">
+              Password must have a minimum 8 character
+            </span>
+          </div>
+
+          <div class="mb-3 text-center">
+            <button class="btn btn-primary">Update user</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{{/each}}
+
+<script>
+  $('#passwordCheckBtn').attr('disabled', true);
+  function passwordChecker() {
+    const input = $('#passwordCheck').val();
+    if (input.length < 9) return;
+    $('#passwordCheckBtn').attr('disabled', false);
+  }
+</script>

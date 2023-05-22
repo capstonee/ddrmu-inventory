@@ -1,0 +1,74 @@
+<div class="wrapper">
+  {{> client-sidenav}}
+  <div class="content-page">
+    <div class="content">
+      {{> client-topnav}}
+
+      <!-- Start Content-->
+      <div class="container-fluid">
+        <!-- start page title -->
+        <div class="row">
+          <div class="col-12">
+            <div class="page-title-box">
+              <div class="page-title-right"></div>
+              <h4 class="page-title">Products</h4>
+            </div>
+          </div>
+        </div>
+        <!-- end page title -->
+
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table
+                    class="table table-centered w-100 dt-responsive nowrap"
+                    id="data-datatable"
+                  >
+                    <thead class="table-light">
+                      <tr>
+                        <th class="all">Product</th>
+                        <th>Added Date</th>
+                        <th>Quantity</th>
+                        <th>Returnable</th>
+                        <th>Return Date</th>
+                        <th>Status</th>
+                        <th style="width: 85px">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody></tbody>
+                  </table>
+                </div>
+              </div>
+              <!-- end card-body-->
+            </div>
+            <!-- end card-->
+          </div>
+          <!-- end col -->
+        </div>
+        <!-- end row -->
+      </div>
+      <!-- container -->
+    </div>
+  </div>
+</div>
+
+<!-- DISPLAY SALES -->
+<script>
+  $(document).ready(function () {
+    //set data to table
+    $.ajax({
+      type: 'GET',
+      url: '/helpers/sales',
+      success: function (result) {
+        var productTable = $('#data-datatable').DataTable();
+        result.map((res) => {
+          dispalyEverySalesInTable(res, productTable);
+        });
+      },
+    }).fail(function (res) {
+      errorSweetAlert();
+    });
+  });
+</script>

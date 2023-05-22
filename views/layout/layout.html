@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <title>DRRMU Inventory System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- App favicon -->
+    <link rel="shortcut icon" href="/assets/images/favicon.png" />
+
+    <!--JQUERY LIB CDN-->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+      integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <!-- Customize css -->
+    <link href="/assets/css/customize.css" rel="stylesheet" type="text/css" />
+    <!-- third party css -->
+    <link
+      href="/assets/css/vendor/dataTables.bootstrap5.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+
+    <link
+      href="https://cdn.datatables.net/buttons/2.2.3/css/buttons.dataTables.min.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+
+    <link
+      href="/assets/css/vendor/responsive.bootstrap5.css"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <!-- third party css end -->
+
+    <!-- App css -->
+    <link href="/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+    <link
+      href="/assets/css/app.min.css"
+      rel="stylesheet"
+      type="text/css"
+      id="app-style"
+    />
+
+    <!-- SWEET ALERT -->
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!--QRCODE LIB-->
+    <script src="https://reeteshghimire.com.np/wp-content/uploads/2021/05/html5-qrcode.min_.js"></script>
+  </head>
+  <body
+    class="loading authentication-bg"
+    data-layout-color="light"
+    data-leftbar-theme="dark"
+    data-layout-mode="fluid"
+    data-rightbar-onstart="false"
+  >
+    {{{content}}}
+
+    <!-- bundle -->
+    <script src="/assets/js/vendor.min.js"></script>
+    <script src="/assets/js/app.min.js"></script>
+
+    <!-- third party js -->
+    <script src="/assets/js/vendor/jquery.dataTables.min.js"></script>
+    <script src="/assets/js/vendor/dataTables.bootstrap5.js"></script>
+    <script src="/assets/js/vendor/dataTables.responsive.min.js"></script>
+    <script src="/assets/js/vendor/responsive.bootstrap5.min.js"></script>
+    <script src="/assets/js/vendor/dataTables.checkboxes.min.js"></script>
+
+    <script src="/assets/vendors/jquery-ui/jquery-ui.min.js"></script>
+
+    <!-- AVATAR -->
+    <script src="/assets/js/vendor/avatar.js"></script>
+
+    <script>
+      (() => {
+        let url = window.location;
+        let query = url.search;
+
+        if (!query) return;
+
+        let alert = {};
+        query
+          .substr(1, query.length)
+          .split('&')
+          .map((r) => r.split('='))
+          .forEach((r) => {
+            alert[r[0]] = decodeURI(r[1]);
+          });
+
+        if (!alert.message && !alert.alert) return;
+
+        const { message: title, alert: icon } = alert;
+
+        const Toast = Swal.mixin({
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 3500,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.addEventListener('mouseenter', Swal.stopTimer);
+            toast.addEventListener('mouseleave', Swal.resumeTimer);
+          },
+        });
+
+        Toast.fire({ icon, title });
+      })();
+    </script>
+    <!--CUSTOMIZE CS -->
+    <script src="/assets/js/customize.js"></script>
+  </body>
+</html>

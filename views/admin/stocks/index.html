@@ -1,0 +1,203 @@
+<div class="wrapper">
+  {{> admin-sidenav stocks=true}}
+  <div class="content-page">
+    <div class="content">
+      {{> admin-topnav}}
+
+      <!-- Start Content-->
+      <div class="container-fluid">
+        <!-- start page title -->
+        <div class="row">
+          <div class="col-12">
+            <div class="page-title-box">
+              <div class="page-title-right"></div>
+              <h4 class="page-title">Products</h4>
+            </div>
+          </div>
+        </div>
+        <!-- end page title -->
+
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body">
+                <div class="row mb-2">
+                  <div class="col-xl-12">
+                    <button
+                      type="button"
+                      class="btn btn-success mb-2 me-2"
+                      data-bs-toggle="modal"
+                      data-bs-target="#add-modal"
+                    >
+                      <i class="mdi mdi-basket me-1"></i> Add New Stocks
+                    </button>
+                  </div>
+                  <!-- end col-->
+                </div>
+
+                <div class="table-responsive">
+                  <table
+                    class="table table-centered table-nowrap mb-0"
+                    id="data-datatable"
+                  >
+                    <thead class="table-light">
+                      <tr>
+                        <th>Product name</th>
+                        <th>Supplier name</th>
+                        <th>Code</th>
+                        <th>Quantity</th>
+                        <th>Cost</th>
+                        <th>Date added</th>
+                        <th>Consumable item</th>
+                        <th style="width: 125px">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {{#each stocks}}
+                      <tr id="{{this._id}}">
+                        <td>{{this.product_id.name}}</td>
+                        <td>
+                          {{this.supplier_id.name}}
+                          <!-- <h5><span class="badge badge-success-lighten"><i class="mdi mdi-bitcoin"></i> Paid</span></h5> -->
+                        </td>
+                        <td>{{threeLetters this.product_id.name}}-{{moment this.createdAt 'YYYY'}}-{{this.inc}}</td>
+                        <td>{{this.qty}}</td>
+                        <td>{{this.cost}}</td>
+                        <td>{{moment this.createdAt 'MMM DD YYYY'}}</td>
+                        <td>
+                          {{#if this.product_id.isReturn}}
+                          <span class="badge bg-success">Yes</span>
+                          {{else}}
+                          <span class="badge bg-danger">No</span>
+                          {{/if}}
+                        </td>
+                        <td>
+                          <a
+                            href="javascript:void(0);"
+                            class="action-icon"
+                            onclick="delete_data('/admin/stocks/delete/','{{this._id}}')"
+                          >
+                            <i class="mdi mdi-delete"></i
+                          ></a>
+                        </td>
+                      </tr>
+                      {{/each}}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <!-- end card-body-->
+            </div>
+            <!-- end card-->
+          </div>
+          <!-- end col -->
+        </div>
+        <!-- end row -->
+      </div>
+      <!-- container -->
+    </div>
+  </div>
+</div>
+
+<!-- ADD MODAL -->
+<div
+  id="add-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="text-center mb-4">
+          <h4 class="text-center">Add Stocks</h4>
+        </div>
+        <form action="/admin/stocks/add" method="POST">
+          <div class="mb-3">
+            <label for="product_id" class="form-label">Select product<span style="color: red">*</span></label>
+            <select
+              name="product_id"
+              class="form-control mb-2"
+              required
+              onchange="getOneProduct('/get/product/', this.value)"
+            >
+              <option value=""></option>
+              {{#each products}}
+              <option value="{{this._id}}">{{this.name}}</option>
+              {{/each}}
+            </select>
+            <label for="supplier_id" class="form-label">Select supplier<span style="color: red">*</span></label>
+            <select name="supplier_id" class="form-control mb-2">
+              <option value=""></option>
+              {{#each supplier}}
+              <option value="{{this._id}}">{{this.name}}</option>
+              {{/each}}
+            </select>
+            <label for="cost" class="form-label"
+              >Cost <span class="unitSpan" style="display: none;"></span
+            ><span style="color: red">*</span></label>
+            <input name="cost" class="form-control" type="number" />
+            <label for="qty" class="form-label">Quantity <span class="unitSpan " style="display: none;"></span
+              ><span style="color: red">*</span></label></label>
+            <input name="qty" class="form-control" type="number" required />
+            <span style="margin-top: 15px; font-size: 12px"
+            >Please fill out the blank for adding new stocks</span
+          >
+          </div>
+          <div class="mb-3 text-center">
+            <button class="btn btn-primary">Add stock</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- UPDATE MODAL -->
+{{#each stocks}}
+<div
+  id="update-modal-{{this._id}}"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="text-center mb-4">
+          <h4 class="text-center">Update Stocks</h4>
+        </div>
+        <form action="/admin/stocks/update/{{this._id}}" method="POST">
+          <div class="mb-3">
+            <label for="product_id" class="form-label">Select product</label>
+            <select name="product_id" class="form-control mb-2" required>
+              <option value="{{this.product_id._id}}" selected hidden>
+                {{this.product_id.name}}
+              </option>
+              <option value=""></option>
+              {{#each ../products}}
+              <option value="{{this._id}}">{{this.name}}</option>
+              {{/each}}
+            </select>
+            <label for="supplier_id" class="form-label">Select supplier</label>
+            <select name="supplier_id" class="form-control mb-2">
+              <option value="{{this.supplier_id._id}}" selected hidden>
+                {{this.supplier_id.name}}
+              </option>
+              <option value=""></option>
+              {{#each ../supplier}}
+              <option value="{{this._id}}">{{this.name}}</option>
+              {{/each}}
+            </select>
+          </div>
+          <div class="mb-3 text-center">
+            <button class="btn btn-primary">Update stock</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{{/each}}

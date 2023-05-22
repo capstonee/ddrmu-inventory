@@ -1,0 +1,371 @@
+<div class="wrapper">
+  {{> admin-sidenav salesActive=true}}
+  <div class="content-page">
+    <div class="content">
+      {{> admin-topnav}}
+
+      <!-- Start Content-->
+      <div class="container-fluid">
+        <!-- start page title -->
+        <div class="row">
+          <div class="col-12">
+            <div class="page-title-box">
+              <h4 class="page-title">Inventory report</h4>
+            </div>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-12">
+            <div class="card widget-inline">
+              <div class="card-body p-0">
+                <div class="row g-0">
+                  <div class="col-sm-4 col-lg-4">
+                    <div class="card shadow-none m-0 border-start">
+                      <div class="card-body text-center">
+                        <i
+                          class="dripicons-inbox text-muted"
+                          style="font-size: 24px"
+                        ></i>
+                        <h3><span>{{totalReturned}}</span></h3>
+                        <p class="text-muted font-15 mb-0">Returned</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-4 col-lg-4">
+                    <div class="card shadow-none m-0 border-start">
+                      <div class="card-body text-center">
+                        <i
+                          class="dripicons-box text-muted"
+                          style="font-size: 24px"
+                        ></i>
+                        <h3><span>{{totalNonReturned}}</span></h3>
+                        <p class="text-muted font-15 mb-0">Non-returned</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-4 col-lg-4">
+                    <div class="card shadow-none m-0 border-start">
+                      <div class="card-body text-center">
+                        <i
+                          class="dripicons-user-group text-muted"
+                          style="font-size: 24px"
+                        ></i>
+                        <h3><span>{{members}}</span></h3>
+                        <p class="text-muted font-15 mb-0">User Account</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- <div class="col-sm-6 col-lg-2">
+                    <div class="card shadow-none m-0 border-start">
+                      <div class="card-body text-center">
+                        <i
+                          class="mdi mdi-cart-plus"
+                          style="font-size: 24px"
+                        ></i>
+                        <h3><span>{{totalCost}}</span></h3>
+                        <p class="text-muted font-15 mb-0">Total cost</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-sm-6 col-lg-2">
+                    <div class="card shadow-none m-0 border-start">
+                      <div class="card-body text-center">
+                        <i
+                          class="mdi mdi-cart-plus"
+                          style="font-size: 24px"
+                        ></i>
+                        <h3><span id="pendingTask">{{totalPrice}}</span></h3>
+                        <p class="text-muted font-15 mb-0">Total collect</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="col-sm-6 col-lg-2">
+                    <div class="card shadow-none m-0 border-start">
+                      <div class="card-body text-center">
+                        <i
+                          class="dripicons-graph-line text-muted"
+                          style="font-size: 24px"
+                        ></i>
+                        <h3>
+                          <span id="pendingTask"
+                            >{{totalNet totalPrice totalCost}}</span
+                          >
+                        </h3>
+                        <p class="text-muted font-15 mb-0">Net Income</p>
+                      </div>
+                    </div>
+                  </div> -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- end page title -->
+        <div class="col-12">
+          <div class="card">
+            <div class="card-body">
+              <div class="row mb-2">
+                <div class="col-sm-12">
+                  <button
+                    class="btn btn-success mb-2"
+                    data-bs-toggle="modal"
+                    data-bs-target="#filterModal"
+                  >
+                    <i class="dripicons-search me-2"></i> Filter
+                  </button>
+
+                  <button class="btn btn-success mb-2" onclick="printData()">
+                    <i class="dripicons-print me-2"></i> Print Report
+                  </button>
+                </div>
+                <h4>Consumable Report</h4>
+              </div>
+              <div class="table-responsive">
+                <table
+                  class="table table-centered table-striped dt-responsive nowrap w-100"
+                  id="data-datatable"
+                >
+                  <thead>
+                    <tr>
+                      <th>Department</th>
+                      <th>User Name</th>
+                      <th>Product name</th>
+                      <th>Product cost</th>
+                      <th>Quantity</th>
+                      <th>Receive By</th>
+                      <th>Date Receive</th> 
+                      <th>Date approved</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {{#each sales}}
+                    <tr>
+                      <td>{{user_id.department}}</td>
+                      <td>
+                        {{replaceName this.user_id.firstname
+                        sales.user_id.email}} {{this.user_id.lastname}}
+                      </td>
+                      <td>{{this.product_id.name}}</td>
+                      <td>{{this.cost}}</td>
+                      <td>{{this.qty}}</td>
+                      <td>{{this.pickUpName}}</td>
+                      <td>
+                        {{#if pickUpDate}}
+                        <!---->
+                        {{moment pickUpDate 'MMM DD YYYY'}}
+                        <!------>
+                        {{pickUpTime}}
+                        <!------>
+                        {{/if}}
+                      </td>
+                      <td>
+                        {{#if approve_date}}
+                        <!---->
+                        {{moment approve_date 'MMM DD YYYY'}} -
+                        <!---->
+                        {{approve_time}} {{/if}}
+                      </td>
+                    </tr>
+                    {{/each}}
+                  </tbody>
+                </table>
+
+                <!----- PRINT ONLY -->
+                <div style="display: none">
+                  <div id="sales-div-print">
+                    <div id="sales-div">
+                      <img
+                        src="/assets/images/buksu-logo.png"
+                        width="60"
+                        style="float: left"
+                      />
+                      <img
+                        src="/assets/images/logo.png"
+                        width="70"
+                        style="float: right"
+                      />
+                      <div style="text-align: center">
+                        <h4>BUKIDNON STATE UNIVERSITY</h4>
+                        <h5>
+                          Malaybalay City, Bukidnon 8700<br />
+                          Tel (088) 813-5661 to 5663; TeleFax (088) 813-2717,
+                          www.buksu.edu.ph
+                        </h5>
+                      </div>
+                      <h5>
+                        DRRMU Inventory report of Consumable
+                        <!---->
+                        {{#if startDate}} as of
+                        <!-- -->
+                        {{convertDate startDate 'MMM DD, YYYY h:ss a'}}
+                        <!----->
+                        {{/if}}
+                        <!----->
+                        {{#if endDate}} to
+                        <!----->
+                        {{convertDate endDate 'MMM DD, YYYY h:ss a'}}
+                        <!----->
+                        {{/if}}
+                      </h5>
+                      <table style="width: 100%">
+                        <thead>
+                          <tr>
+                            <th>Department</th>
+                            <th>Product name</th>
+                            <th>Product cost</th>
+                            <th>Quantity</th>
+                            <th>Receive By</th>
+                            <th>Date Receive</th>
+                            <th>Date approved</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {{#each sales}}
+                          <tr>
+                            <td>{{user_id.department}}</td>
+                            <td>{{this.product_id.name}}</td>
+                            <td>{{this.cost}}</td>
+                            <td>{{this.qty}}</td>
+                            <td>{{this.pickUpName}}</td>
+                            <td>
+                              {{#if pickUpDate}}
+                              <!---->
+                              {{moment pickUpDate 'MMM DD YYYY'}} -
+                              <!---->
+                              {{pickUpTime}} {{/if}}
+                            </td>
+                            <td>
+                              {{#if approve_date}}
+                              <!---->
+                              {{moment approve_date 'MMM DD YYYY'}}-
+                              <!---->
+                              {{approve_time}} {{/if}}
+                            </td>
+                          </tr>
+                          {{/each}}
+                        </tbody>
+                      </table>
+                      <div style="text-align: right">
+                        <br /><br /><br /><br />
+                        <h5>RHONDELL M. PARAISO <br />DRRMU Head</h5>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- end card-body-->
+          </div>
+          <!-- end card-->
+        </div>
+        <!-- end col -->
+      </div>
+      <!-- end row -->
+    </div>
+    <!-- container -->
+  </div>
+</div>
+
+<!-- Right modal content -->
+<div
+  class="modal fade"
+  id="filterModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Filter</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body pb-5">
+        <form action="/admin/search" method="POST">
+          <p>Select user</p>
+          <select name="user_id" class="form-control mb-2" id="usersOption">
+            <option value="">All user</option>
+          </select>
+          <p>Date start</p>
+          <input name="startDate" type="date" class="form-control mb-2" />
+          <p>Date end</p>
+          <input name="endDate" type="date" class="form-control mb-4" />
+          <button class="btn btn-primary" style="float: right" type="submit">
+            Filter report
+          </button>
+
+          <input
+            name="totalReturned"
+            type="text"
+            value="{{totalReturned}}"
+            hidden
+          />
+          <input
+            hidden
+            name="totalNonReturned"
+            type="text"
+            value="{{totalNonReturned}}"
+          />
+          <input hidden name="product_type" type="text" value="equipment" />
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function () {
+    //GET ALL CLIENT USERS
+    $.ajax({
+      type: 'GET',
+      url: `/get/all-user`,
+      success: function (result) {
+        result.map((r) => {
+          $(`#usersOption`).append(
+            `<option value="${r._id}">${r.firstname ? r.firstname : r.email} ${
+              r.lastname ? r.lastname : ''
+            }</option>`
+          );
+        });
+      },
+    }).fail(function (res) {
+      errorSweetAlert();
+    });
+  });
+</script>
+<script>
+  function printData() {
+    var divID = 'sales-div-print';
+    //Get the HTML of div
+    var divElements = document.getElementById(divID).innerHTML;
+    //Get the HTML of whole page
+    var oldPage = document.body.innerHTML;
+    //Reset the page's HTML with div's HTML only
+    document.body.innerHTML = `<html><head><title></title></head><body> ${divElements} 
+    <style>
+    body, html,#sales-div {
+      background-color: white;
+    }
+    #sales-div th,
+    #sales-div td {
+      border: 1px solid gray !important;
+    }
+  </style>
+  </body>`;
+
+    //Print Page
+    window.print();
+    //Restore orignal HTML
+    document.body.innerHTML = oldPage;
+  }
+</script>

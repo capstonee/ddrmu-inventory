@@ -1,0 +1,739 @@
+<div class="wrapper">
+  {{> admin-sidenav products=true}}
+  <div class="content-page">
+    <div class="content">
+      {{> admin-topnav}}
+
+      <!-- Start Content-->
+      <div class="container-fluid">
+        <!-- start page title -->
+        <div class="row">
+          <div class="col-12">
+            <div class="page-title-box">
+              <div class="page-title-right"></div>
+              <h4 class="page-title">Products</h4>
+            </div>
+          </div>
+        </div>
+        <!-- end page title -->
+
+        <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-body">
+                <div class="row mb-2">
+                  <div class="col-sm-5">
+                    <button
+                      class="btn btn-success mb-2"
+                      data-bs-toggle="modal"
+                      data-bs-target="#add-modal-return"
+                      style="margin-right: 10px"
+                    >
+                      <i class="mdi mdi-plus-circle me-2"></i> Equipment item
+                    </button>
+
+                    <button
+                      class="btn btn-success mb-2"
+                      data-bs-toggle="modal"
+                      data-bs-target="#add-modal"
+                    >
+                      <i class="mdi mdi-plus-circle me-2"></i> Consumable item
+                    </button>
+                  </div>
+                </div>
+
+                <div class="table-responsive">
+                  <table
+                    class="table table-centered w-100 dt-responsive nowrap"
+                    id="data-datatable"
+                  >
+                    <thead class="table-light">
+                      <tr>
+                        <th class="all">Product</th>
+                        <th>Code</th>
+                        <th>Category</th>
+                        <th>Brand</th>
+                        <th>Unit</th>
+                        <th>Quantity</th>
+                        <th>Returnable</th>
+                        <th style="width: 85px">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {{#each products}}
+                      <tr id="{{this._id}}">
+                        <td>
+                          <img
+                            src="{{this.img}}"
+                            alt="contact-img"
+                            title="contact-img"
+                            class="rounded me-3"
+                            height="48"
+                          />
+                          <p class="m-0 d-inline-block align-middle font-16">
+                            {{this.name}}
+                          </p>
+                        </td>
+                        <td>{{this.code}}</td>
+                        <td>{{this.category_id.name}}</td>
+                        <td>{{this.brand_id.name}}</td>
+                        <td>{{this.unit_id.name}}</td>
+                        <td>{{this.total}}</td>
+                        <td>
+                          {{#if this.isReturn}}
+                          <span class="badge bg-success">Yes</span>
+                          {{else}}
+                          <span class="badge bg-danger">No</span>
+                          {{/if}}
+                        </td>
+                        <td class="table-action">
+                          <a
+                            href="javascript:void(0);"
+                            class="action-icon"
+                            onclick="showCode('{{this._id}}', '{{this.code}}')"
+                            data-bs-toggle="modal"
+                            data-bs-target="#view-modal-{{this._id}}"
+                          >
+                            <i class="mdi mdi-eye"></i
+                          ></a>
+                          <a
+                            href="javascript:void(0);"
+                            class="action-icon"
+                            data-bs-toggle="modal"
+                            data-bs-target="#update-modal-{{this._id}}"
+                            onclick="selectedId('{{_id}}')"
+                          >
+                            <i class="mdi mdi-square-edit-outline"></i
+                          ></a>
+                          <a
+                            href="javascript:void(0);"
+                            class="action-icon"
+                            onclick="delete_data('/admin/products/delete/', '{{this._id}}')"
+                          >
+                            <i class="mdi mdi-delete"></i
+                          ></a>
+                        </td>
+                      </tr>
+                      {{/each}}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <!-- end card-body-->
+            </div>
+            <!-- end card-->
+          </div>
+          <!-- end col -->
+        </div>
+        <!-- end row -->
+      </div>
+      <!-- container -->
+    </div>
+  </div>
+</div>
+
+<!-- ADD MODAL -->
+<div
+  id="add-modal"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-body mb-4">
+        <form
+          action="/admin/products/add"
+          method="POST"
+          enctype="multipart/form-data"
+        >
+          <h4>Add Consumable item</h4>
+          <span>Please fill out the black for adding new consumable item</span>
+          <div class="row mt-3">
+            <div class="col-sm-7">
+              <label for="name" class="form-label"
+                >Product name <span class="text-danger">*</span></label
+              >
+              <input
+                name="name"
+                class="form-control mb-2"
+                type="text"
+                required
+              />
+              <label for="code" class="form-label"
+                >Product code <span class="text-danger">*</span></label
+              >
+              <input
+                name="code"
+                class="form-control mb-2"
+                type="text"
+                required
+                placeholder="XXXX-XXXXX-XXXX"
+
+              />
+              <label for="category_id" class="form-label"
+                >Product category <span class="text-danger">*</span></label
+              >
+              <select name="category_id" class="form-control mb-2" required>
+                <option value=""></option>
+                {{#each category}}
+                <option value="{{this._id}}">{{this.name}}</option>
+                {{/each}}
+              </select>
+              <label for="brand_id" class="form-label"
+                >Product brand <span class="text-danger">*</span></label
+              >
+              <select name="brand_id" class="form-control mb-2" required>
+                <option value=""></option>
+                {{#each brand}}
+                <option value="{{this._id}}">{{this.name}}</option>
+                {{/each}}
+              </select>
+              <label for="unit" class="form-label"
+                >Product unit <span class="text-danger">*</span></label
+              >
+              <select name="unit_id" class="form-control mb-2" required>
+                <option value=""></option>
+                {{#each unit}}
+                <option value="{{this._id}}">{{this.name}}</option>
+                {{/each}}
+              </select>
+              <input
+                name="isReturn"
+                class="form-control mb-2"
+                type="text"
+                value="false"
+                hidden
+              />
+            </div>
+            <div
+              class="col-sm-5 dropzone"
+              id="myAwesomeDropzone"
+              data-plugin="dropzone"
+              data-previews-container="#file-previews"
+              data-upload-preview-template="#uploadPreviewTemplate"
+            >
+            <p style="color: red;">Note: Image maximum 5 MB</p>
+              <center>
+                <img
+                  class="img-fluid"
+                  id="imageResult"
+                  src="/assets/images/products/product-default.jpg"
+                  class="rounded-circle"
+                  style="height: 400px"
+                />
+              </center>
+              <input
+                id="upload"
+                name="img"
+                type="file"
+                accept=".png,.jpg,.jpeg"
+                onchange="readURL(this);"
+                class="form-control border-0"
+              />
+            </div>
+          </div>
+          <div class="text-center mt-4">
+            <button class="btn btn-primary">Add product</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADD MODAL-RETURN -->
+<div
+  id="add-modal-return"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-body mb-4">
+        <form
+          action="/admin/products/add"
+          method="POST"
+          enctype="multipart/form-data"
+        >
+          <h4>Add Equipment item</h4>
+          <span>Please fill out the blank for adding new equipment item</span>
+          <div class="row mt-3">
+            <div class="col-sm-7">
+              <label for="name" class="form-label"
+                >Product name <span class="text-danger">*</span></label
+              >
+              <input
+                name="name"
+                class="form-control mb-2"
+                type="text"
+                required
+              />
+              <label for="code" class="form-label"
+                >Product code <span class="text-danger">*</span></label
+              >
+              <input
+                name="code"
+                class="form-control mb-2"
+                type="text"
+                required
+                placeholder="XXXX-XXXX-XXXXX"
+              />
+              <label for="category_id" class="form-label"
+                >Product category <span class="text-danger">*</span></label
+              >
+              <select name="category_id" class="form-control mb-2" required>
+                <option value=""></option>
+                {{#each category}}
+                <option value="{{this._id}}">{{this.name}}</option>
+                {{/each}}
+              </select>
+              <label for="brand_id" class="form-label"
+                >Product brand <span class="text-danger">*</span></label
+              >
+              <select name="brand_id" class="form-control mb-2" required>
+                <option value=""></option>
+                {{#each brand}}
+                <option value="{{this._id}}">{{this.name}}</option>
+                {{/each}}
+              </select>
+              <label for="unit" class="form-label"
+                >Product unit <span class="text-danger">*</span></label
+              >
+              <select name="unit_id" class="form-control mb-2" required>
+                <option value=""></option>
+                {{#each unit}}
+                <option value="{{this._id}}">{{this.name}}</option>
+                {{/each}}
+              </select>
+
+              <input
+                name="isReturn"
+                class="form-control mb-2"
+                type="text"
+                value="true"
+                hidden
+              />
+            </div>
+            <div
+              class="col-sm-5 dropzone"
+              id="myAwesomeDropzone"
+              data-plugin="dropzone"
+              data-previews-container="#file-previews"
+              data-upload-preview-template="#uploadPreviewTemplate"
+            >
+           <p style="color: red;">Note: Image maximum 5 MB</p>
+              <center>
+                <img
+                  class="img-fluid"
+                  id="imageResult2"
+                  src="/assets/images/products/product-default.jpg"
+                  class="rounded-circle"
+                  style="height: 400px"
+                />
+              </center>
+              <input
+                id="upload2"
+                name="img"
+                type="file"
+                accept=".png,.jpg,.jpeg"
+                onchange="readURL2(this);"
+                class="form-control border-0"
+              />
+            </div>
+           
+          </div>
+          <div class="text-center mt-4">
+            <button class="btn btn-primary">Add product</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- UPDATE MODAL -->
+{{#each products}}
+<div
+  id="update-modal-{{this._id}}"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-body mb-4">
+        <form
+          action="/admin/products/update"
+          method="POST"
+          enctype="multipart/form-data"
+        >
+          <h4>Update product</h4>
+          <div class="row mt-3">
+            <div class="col-sm-7">
+              <input name="_id" type="hidden" value="{{this._id}}" />
+              <label for="name" class="form-label">Product name</label>
+              <input
+                name="name"
+                class="form-control mb-2"
+                type="text"
+                required
+                value="{{this.name}}"
+              />
+              <label for="code" class="form-label">Product code</label>
+              <input
+                name="code"
+                class="form-control mb-2"
+                type="text"
+                value="{{this.code}}"
+              />
+              <label for="category_id" class="form-label"
+                >Product category</label
+              >
+              <select name="category_id" class="form-control mb-2" required>
+                <option value="{{this.category_id._id}}" selected hidden>
+                  {{this.category_id.name}}
+                </option>
+                <option value=""></option>
+                {{#each ../category}}
+                <option value="{{this._id}}">{{this.name}}</option>
+                {{/each}}
+              </select>
+              <label for="brand_id" class="form-label">Product brand</label>
+              <select name="brand_id" class="form-control mb-2" required>
+                <option value="{{this.brand_id._id}}" selected hidden>
+                  {{this.brand_id.name}}
+                </option>
+                <option value=""></option>
+                {{#each ../brand}}
+                <option value="{{this._id}}">{{this.name}}</option>
+                {{/each}}
+              </select>
+              <label for="unit" class="form-label">Product unit</label>
+              <select name="unit_id" class="form-control mb-2" required>
+                <option value="{{this.unit_id._id}}" selected hidden>
+                  {{this.unit_id.name}}
+                </option>
+                <option value=""></option>
+                {{#each ../unit}}
+                <option value="{{this._id}}">{{this.name}}</option>
+                {{/each}}
+              </select>
+              <label for="unit" class="form-label">To be return</label>
+              <select name="isReturn" class="form-control mb-2" required>
+                <option value="{{this.isReturn}}" selected hidden>
+                  {{#if this.isReturn}}Yes{{else}}No{{/if}}
+                </option>
+                <option value=""></option>
+                <option value="true">Yes</option>
+                <option value="false">No</option>
+              </select>
+            </div>
+            <div
+              class="col-sm-5 dropzone"
+              id="myAwesomeDropzone"
+              data-plugin="dropzone"
+              data-previews-container="#file-previews"
+              data-upload-preview-template="#uploadPreviewTemplate"
+            >
+            <p style="color: red;">Note: Image maximum 5 MB</p>
+              <center>
+                <img
+                  class="img-fluid"
+                  id="imageResult-{{_id}}"
+                  src="{{this.img}}"
+                  class="rounded-circle"
+                  style="height: 400px"
+                />
+              </center>
+              <input
+                id="upload-{{_id}}"
+                name="img"
+                type="file"
+                accept=".png,.jpg,.jpeg"
+                onchange="readURLData(this);"
+                class="form-control border-0"
+              />
+            </div>
+          </div>
+          <div class="text-center mt-4">
+            <button class="btn btn-primary">Update product</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{{/each}}
+
+<!-- VIEW MODAL -->
+{{#each products}}
+<div
+  id="view-modal-{{this._id}}"
+  class="modal fade"
+  tabindex="-1"
+  role="dialog"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-body my-4">
+        <div class="row">
+          <div class="col-sm-7">
+            <input name="_id" type="hidden" value="{{this._id}}" />
+            <label for="name" class="form-label">Product name</label>
+            <input
+              name="name"
+              class="form-control mb-2"
+              type="text"
+              disabled
+              value="{{this.name}}"
+            />
+            <label for="code" class="form-label">Product code</label>
+            <input
+              name="code"
+              class="form-control mb-2"
+              type="text"
+              disabled
+              value="{{this.code}}"
+            />
+            <label for="category_id" class="form-label">Product category</label>
+            <input
+              name="category_id"
+              class="form-control mb-2"
+              type="text"
+              disabled
+              value="{{this.category_id.name}}"
+            />
+            <label for="brand_id" class="form-label">Product brand</label>
+            <input
+              name="brand_id"
+              class="form-control mb-2"
+              type="text"
+              disabled
+              value="{{this.brand_id.name}}"
+            />
+            <label for="unit" class="form-label">Product unit</label>
+            <input
+              name="unit_id"
+              class="form-control mb-2"
+              type="text"
+              disabled
+              value="{{this.unit_id.name}}"
+            />
+            <label for="unit" class="form-label">To be return</label>
+            <input
+              name="isReturn"
+              class="form-control mb-2"
+              type="text"
+              disabled
+              value="{{#if this.isReturn}}Yes{{else}}No{{/if}}"
+            />
+            <label for="price" class="form-label">Product price</label>
+            <input
+              name="price"
+              class="form-control mb-2"
+              type="text"
+              disabled
+              value="{{this.price}}"
+            />
+          </div>
+          <div
+            class="col-sm-5 dropzone"
+            id="myAwesomeDropzone"
+            data-plugin="dropzone"
+            data-previews-container="#file-previews"
+            data-upload-preview-template="#uploadPreviewTemplate"
+          >
+            <img
+              class="img-fluid"
+              src="{{this.img}}"
+              class="rounded-circle"
+              style="height: 400px"
+            />
+          </div>
+          <div class="col-sm-12 pt-4 px-3">
+            <div class="row">
+              <div class="col-sm-12" style="overflow-y: scroll">
+                <div id="barcode-{{this._id}}">
+                  <button
+                    class="btn btn-primary btn-small mb-2 ml-5"
+                    onclick="printBarcode()"
+                  >
+                    Print Barcode code</button
+                  ><br />
+                </div>
+              </div>
+              <div class="col-sm-6" id="qrcode-{{this._id}}">
+                <input
+                  id="_id-{{this._id}}"
+                  type="hidden"
+                  value="{{this._id}}"
+                />
+                <button
+                  class="btn btn-primary btn-small mb-2"
+                  onclick="printQRcode()"
+                >
+                  Print QR code
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{{/each}}
+<!-- UPLAOD Image -->
+<script>
+  /*  ==========================================
+    SHOW UPLOADED IMAGE
+* ========================================== */
+  function readURL(input) {
+    if (input.files && input.files[0]) {
+      var reader = new FileReader();
+
+      reader.onload = function (e) {
+        $('#imageResult').attr('src', e.target.result);
+        $('#imgdatainput').val(e.target.result);
+      };
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
+
+  $(function () {
+    $('#upload').on('change', function () {
+      readURL(input);
+    });
+  });
+
+  /*  ==========================================
+    SHOW UPLOADED IMAGE NAME
+* ========================================== */
+  var input = document.getElementById('upload');
+  var infoArea = document.getElementById('upload-label');
+
+  input.addEventListener('change', showFileName);
+  function showFileName(event) {
+    var input = event.srcElement;
+    var fileName = input.files[0].name;
+    infoArea.textContent = 'File name: ' + fileName;
+  }
+</script>
+
+<script>
+  /*  ==========================================
+    SHOW UPLOADED IMAGE
+* ========================================== */
+  function readURL2(input) {
+    if (input?.files && input?.files[0]) {
+      var reader = new FileReader();
+
+      reader.onload = function (e) {
+        $('#imageResult2').attr('src', e.target.result);
+      };
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
+
+  $(function () {
+    $('#upload2').on('change', function () {
+      readURL2(input);
+    });
+  });
+</script>
+
+<script>
+  let selectedProductId = '';
+  function selectedId(id) {
+    selectedProductId = id;
+  }
+  /*  ==========================================
+    SHOW UPLOADED IMAGE
+* ========================================== */
+  function readURLData(input) {
+    if (input.files && input.files[0]) {
+      var reader = new FileReader();
+
+      reader.onload = function (e) {
+        $(`#imageResult-${selectedProductId}`).attr('src', e.target.result);
+        $(`#imgdatainput-${selectedProductId}`).val(e.target.result);
+      };
+      reader.readAsDataURL(input.files[0]);
+    }
+  }
+
+  $(function () {
+    $(`#upload-${selectedProductId}`).on('change', function () {
+      readURLData(input);
+    });
+  });
+
+  /*  ==========================================
+    SHOW UPLOADED IMAGE NAME
+* ========================================== */
+  var input = document.getElementById(`upload-${selectedProductId}`);
+  var infoArea = document.getElementById(`upload-label-${selectedProductId}`);
+
+  input.addEventListener('change', showFileName);
+  function showFileName(event) {
+    var input = event.srcElement;
+    var fileName = input.files[0].name;
+    infoArea.textContent = 'File name: ' + fileName;
+  }
+</script>
+
+<!--QRCODE CDN-->
+<script
+  src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"
+  integrity="sha512-CNgIRecGo7nphbeZ04Sc13ka07paqdeTu0WR1IM4kNcpmBAUSHSQX0FslNhTDadL4O5SAGapGt4FodqL8My0mA=="
+  crossorigin="anonymous"
+  referrerpolicy="no-referrer"
+></script>
+<!--BARCODE CDN-->
+<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
+
+<script>
+  function showCode(_id, barcode) {
+    //REMOVE QRCODE & BARCODE
+    $('#qrcode').remove();
+    $('#div-barcode').remove();
+    $(`#qrcode-${_id}`).append(`<div id="qrcode"></div>`);
+    $(`#barcode-${_id}`).append(
+      `<div id="div-barcode"><svg id="barcode"></svg></div>`
+    );
+    //DISPLAY QRCODE
+    var qrcode = new QRCode(`qrcode`);
+    qrcode.makeCode($(`#_id-${_id}`).val());
+    //DISPLAY BARCODE
+    JsBarcode('#barcode', barcode, {
+      format: 'CODE128',
+      text: barcode,
+      width: 2,
+      height: 50,
+      displayValue: true,
+    });
+  }
+
+  function printQRcode() {
+    var a = window.open('', '', 'height=500, width=500');
+    a.document.write(`<html><head><title></title></head><body>
+        ${document.getElementById('qrcode').innerHTML}
+      </body></html>`);
+    a.document.close();
+    a.print();
+  }
+  function printBarcode() {
+    var a = window.open('', '', 'height=500, width=500');
+    a.document.write(`<html><head><title></title></head><body>
+        ${document.getElementById('div-barcode').innerHTML}
+      </body></html>`);
+    a.document.close();
+    a.print();
+  }
+</script>
